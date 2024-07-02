@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Unix/linux binaries
+*
+!**/
+!**/*.*
+
+# Input and output files
+*.in
+*.out
