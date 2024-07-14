@@ -1,0 +1,360 @@
+#include <algorithm>
+#include <chrono>
+#include <climits>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <deque>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <map>
+#include <queue>
+#include <set>
+#include <stack>
+#include <string>
+#include <vector>
+
+using namespace std;
+using namespace std::chrono;
+
+#define f first
+#define s second
+#define ppb pop_back
+#define psb push_back
+#define fors(i, a, b) for (auto i = a; i < b; i++)
+#define revs(i, a, b) for (auto i = a; i > b; i--)
+#define len(a) (a).length()
+#define sz(a) (a).size()
+#define vec1(type, n) vector<type>(n)
+#define vec2(type, n, m) vector<vector<type>>((n), vector<type>((m)))
+#define lsh(a) (1 << (a));
+#define str(a) to_string(a)
+#define ft front()
+#define bk back()
+#define all(a) (a).begin(), (a).end()
+#define print(n) cout << n << " ";
+#define println(n) cout << n << "\n";
+#define fastio() (ios_base::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr), cerr.tie(nullptr), cout << fixed, cout << setprecision(10));
+#define debug(...) fprintf(stderr, __VA_ARGS__), fflush(stderr)
+
+// clang-format off
+#define time__(d) \
+    for ( \
+        auto blockTime = make_pair(chrono::high_resolution_clock::now(), true); \
+        blockTime.second; \
+        debug("%s: %ld ms\n", d, chrono::duration_cast<chrono::milliseconds>(chrono::high_resolution_clock::now() - blockTime.first).count()), blockTime.second = false \
+    )
+// clang-format on
+
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
+typedef vector<vector<int>> vvi;
+typedef vector<vector<bool>> vvb;
+typedef vector<vector<ll>> vvll;
+typedef vector<int> vi;
+typedef vector<ll> vll;
+typedef vector<string> vs;
+typedef vector<pii> vpii;
+typedef vector<pll> vpll;
+
+const string ln = "\n";
+const double PI = 3.14159265358979323846;
+const int MAX_N = 1e5 + 5;
+const ll MOD = 1e9 + 7;
+const ll INF = 1e9;
+const ll INFLL = LLONG_MAX;
+const pii d4[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+const pii d8[8] = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, -1}};
+
+template <typename T> void readarr(vector<T> &arr) {
+    for (T &v : arr) {
+        cin >> v;
+    }
+}
+
+template <typename... T> void readin(T &...args) {
+    ((cin >> args), ...);
+}
+
+template <typename T> void printarr(const T &arr) {
+    for (auto it = arr.begin(); it != arr.end();) {
+        cout << *it;
+        if (++it != arr.end())
+            cout << " ";
+    }
+
+    cout << "\n";
+}
+
+template <typename T> T gcd(T a, T b) {
+    if (b == 0)
+        return a;
+
+    return gcd(b, a % b);
+}
+
+int recur_depth = 0;
+
+// clang-format off
+#ifdef DEBUG
+#define dbg(x) {++recur_depth; auto x_=x; --recur_depth; cerr<<string(recur_depth, '\t')<<"\e[91m"<<__func__<<":"<<__LINE__<<"\t"<<#x<<" = "<<x_<<"\e[39m"<<endl;}
+// clang-format on
+#else
+#define dbg(x)
+#endif
+template <typename Ostream, typename Cont> typename enable_if<is_same<Ostream, ostream>::value, Ostream &>::type operator<<(Ostream &os, const Cont &v) {
+    os << "[";
+    for (auto &x : v) {
+        os << x << ", ";
+    }
+
+    return os << "]";
+}
+
+template <typename Ostream, typename... Ts> Ostream &operator<<(Ostream &os, const pair<Ts...> &p) {
+    return os << "{" << p.first << ", " << p.second << "}";
+}
+
+template <typename T> void print_mat(const T &mat) {
+    for (const auto &row : mat) {
+        for (const auto &elem : row) {
+            cout << elem << " ";
+        }
+
+        cout << "\n";
+    }
+}
+
+template <typename T> void print_mat(const T mat, int n, int m) {
+    fors(i, 0, n) {
+        fors(j, 0, m) {
+            cout << mat[i][j] << " ";
+        }
+
+        cout << "\n";
+    }
+}
+
+template <typename T> int bs(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l <= r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] == t) {
+            return k;
+        }
+
+        if (arr[k] < t) {
+            l = k + 1;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsl(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l) / 2;
+
+        if (arr[k] >= t) {
+            r = k;
+        } else {
+            l = k + 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+template <typename T> int bsr(const T &arr, int t, bool find = false) {
+    int l = 0;
+    int r = sz(arr) - 1;
+    int k;
+
+    while (l < r) {
+        k = l + (r - l + 1) / 2;
+
+        if (arr[k] <= t) {
+            l = k;
+        } else {
+            r = k - 1;
+        }
+    }
+
+    return (find ? l : (arr[l] == t ? l : -1));
+}
+
+class UnionFind {
+  public:
+    vi reps;
+    vi rank;
+
+    UnionFind(int n) : reps(n), rank(n, 0) {
+        fors(i, 0, n) {
+            reps[i] = i;
+        }
+    }
+
+    int find(int x) {
+        while (x != reps[x]) {
+            reps[x] = reps[reps[x]];
+            x = reps[x];
+        }
+
+        return x;
+    }
+
+    void merge(int x, int y) {
+        x = find(x);
+        y = find(y);
+
+        if (x == y) {
+            return;
+        }
+
+        if (rank[x] > rank[y]) {
+            reps[y] = x;
+        } else {
+            reps[x] = y;
+
+            if (rank[x] == rank[y]) {
+                rank[y]++;
+            }
+        }
+    }
+};
+
+class vec3 {
+  public:
+    double x, y, z;
+
+    vec3() : x(0), y(0), z(0) {
+    }
+    vec3(double dx, double dy, double dz = 0) : x(dx), y(dy), z(dz) {
+    }
+
+    vec3 operator-() const {
+        return vec3(-x, -y, -z);
+    }
+
+    double magnitude() const {
+        return sqrt(x * x + y * y + z * z);
+    }
+};
+
+inline vec3 operator-(const vec3 &a, const vec3 &b) {
+    return vec3(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+inline vec3 cross(const vec3 &a, const vec3 &b) {
+    double dx = a.y * b.z - a.z * b.y;
+    double dy = a.z * b.x - a.x * b.z;
+    double dz = a.x * b.y - a.y * b.x;
+
+    return vec3(dx, dy, dz);
+}
+
+inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
+    return 0.5 * cross(b - a, c - a).magnitude();
+}
+
+int find(string &s, int n) {
+    int res = 0;
+
+    for (int i = 0; i < n; i++) {
+        if (s[i] == '.') {
+            res = i;
+            break;
+        }
+    }
+
+    return res;
+}
+
+void solve() {
+    int n, sz, di, h = 0;
+    string s, t, cur, next;
+    readin(n, s, t);
+    queue<string> q;
+    set<string> vis;
+    s = s + "..";
+    t = t + "..";
+    q.push(s);
+    vis.insert(s);
+
+    while (!q.empty()) {
+        sz = q.size();
+
+        // Go through all the string states in the queue
+        for (int i = 0; i < sz; i++) {
+            cur = q.front();
+
+            // If we have a match, then it probably is the first one
+            if (cur == t) {
+                cout << h;
+                return;
+            }
+
+            q.pop();
+            di = find(cur, n + 1);
+
+            for (int j = 0; j < n + 1; j++) {
+                if (cur[j] == '.' || cur[j + 1] == '.') {
+                    continue;
+                }
+
+                vector<char> swp(all(cur));
+                swp[di] = cur[j];
+                swp[di + 1] = cur[j + 1];
+                swp[j] = swp[j + 1] = '.';
+                next = string(all(swp));
+
+                if (vis.find(next) == vis.end()) {
+                    q.push(next);
+                    vis.insert(next);
+                }
+            }
+        }
+
+        ++h;
+    }
+
+    cout << -1;
+}
+
+int main() {
+    fastio();
+
+    int t = 1;
+    /* int t; */
+    /* cin >> t; */
+
+#ifdef DEBUG
+    while (t--) {
+        time__("Time") {
+            solve();
+        }
+    }
+#else
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("error.txt", "w", stderr);
+    freopen("output.txt", "w", stdout);
+#endif
+    while (t--) {
+        solve();
+    }
+#endif
+}
