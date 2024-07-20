@@ -270,42 +270,42 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-const ll mod = 998244353;
-ll memo[81][81];
+bool valid(const string &s, const int n) {
+    int i = 0;
+    int j = n - 1;
+    while (i < j) {
+        if (s[i] != s[j]) {
+            return true;
+        }
+        i++;
+        j--;
+    }
+    return false;
+}
 
 void solve() {
-    int n;
-    ll d;
-    cin >> n;
-    vll A(n), res(n, 0);
-    readarr(A);
-    res[0] = n;
+    int N, K, res = 0;
+    string S;
+    set<string> st;
+    readin(N, K, S);
+    sort(all(S));
 
-    function<ll(int, int)> dp = [&](int i, int j) -> ll {
-        if (j == 0)
-            return 1;
-        if (memo[i][j] != -1)
-            return memo[i][j];
-        ll out = 0;
-        for (int x = i + 1; x < n; x++) {
-            if (A[x] - A[i] == d)
-                out = (out + dp(x, j - 1)) % mod;
-        }
-        memo[i][j] = out;
-        return out;
-    };
-
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            memset(memo, -1, sizeof(memo));
-            for (int k = 2; k <= n; k++) {
-                d = A[j] - A[i];
-                res[k - 1] = (res[k - 1] + dp(j, k - 2)) % mod;
+    do {
+        if (st.find(S) == st.end()) {
+            bool f = true;
+            for (int i = 0; i <= N - K; i++) {
+                if (!valid(S.substr(i, K), K)) {
+                    f = false;
+                    break;
+                }
             }
+            if (f) {
+                ++res;
+            }
+            st.insert(S);
         }
-    }
-    for (ll x : res)
-        cout << x << " ";
+    } while (next_permutation(all(S)));
+    println(res);
 }
 
 int main() {

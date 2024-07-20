@@ -270,42 +270,24 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-const ll mod = 998244353;
-ll memo[81][81];
+bool edge(int i, int j, int H, int W) {
+    return (i == 0 || j == 0 || i == H - 1 || j == W - 1);
+}
 
 void solve() {
-    int n;
-    ll d;
-    cin >> n;
-    vll A(n), res(n, 0);
-    readarr(A);
-    res[0] = n;
+    int H, W, Y;
+    readin(H, W, Y);
 
-    function<ll(int, int)> dp = [&](int i, int j) -> ll {
-        if (j == 0)
-            return 1;
-        if (memo[i][j] != -1)
-            return memo[i][j];
-        ll out = 0;
-        for (int x = i + 1; x < n; x++) {
-            if (A[x] - A[i] == d)
-                out = (out + dp(x, j - 1)) % mod;
-        }
-        memo[i][j] = out;
-        return out;
-    };
+    vector<vector<int>> A(H, vector<int>(W));
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<int>> pq;
 
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            memset(memo, -1, sizeof(memo));
-            for (int k = 2; k <= n; k++) {
-                d = A[j] - A[i];
-                res[k - 1] = (res[k - 1] + dp(j, k - 2)) % mod;
-            }
+    for (int i = 0; i < H; i++) {
+        for (int j = 0; j < W; j++) {
+            cin >> A[i][j];
+            if (edge(i, j, H, W))
+                pq.push({A[i][j], {i, j}});
         }
     }
-    for (ll x : res)
-        cout << x << " ";
 }
 
 int main() {

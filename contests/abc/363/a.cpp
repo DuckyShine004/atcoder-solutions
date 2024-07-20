@@ -270,42 +270,12 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-const ll mod = 998244353;
-ll memo[81][81];
-
 void solve() {
     int n;
-    ll d;
     cin >> n;
-    vll A(n), res(n, 0);
-    readarr(A);
-    res[0] = n;
+    int k = (n / 100) + 1;
 
-    function<ll(int, int)> dp = [&](int i, int j) -> ll {
-        if (j == 0)
-            return 1;
-        if (memo[i][j] != -1)
-            return memo[i][j];
-        ll out = 0;
-        for (int x = i + 1; x < n; x++) {
-            if (A[x] - A[i] == d)
-                out = (out + dp(x, j - 1)) % mod;
-        }
-        memo[i][j] = out;
-        return out;
-    };
-
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            memset(memo, -1, sizeof(memo));
-            for (int k = 2; k <= n; k++) {
-                d = A[j] - A[i];
-                res[k - 1] = (res[k - 1] + dp(j, k - 2)) % mod;
-            }
-        }
-    }
-    for (ll x : res)
-        cout << x << " ";
+    println(100 * k - n);
 }
 
 int main() {
