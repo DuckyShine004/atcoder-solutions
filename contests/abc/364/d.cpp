@@ -270,31 +270,28 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-bool edge(int i, int j, int H, int W) {
-    return (i == 0 || j == 0 || i == H - 1 || j == W - 1);
-}
-
 void solve() {
-    int H, W, Y, t;
-    readin(H, W, Y);
+    int N, Q;
+    long b, k, l, r, m, d;
+    readin(N, Q);
+    vector<long> a(N);
+    readarr(a);
+    sort(all(a));
 
-    vector<vector<int>> A(H, vector<int>(W));
-    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<int>> pq;
-
-    for (int i = 0; i < H; i++) {
-        for (int j = 0; j < W; j++) {
-            cin >> A[i][j];
-            if (edge(i, j, H, W))
-                pq.push({A[i][j], {i, j}});
+    while (Q--) {
+        readin(b, k);
+        l = 0;
+        r = 1e9 + 1;
+        while (l < r) {
+            m = l + (r - l) / 2;
+            d = upper_bound(all(a), b + m) - lower_bound(all(a), b - m);
+            if (d >= k) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
         }
-    }
-
-    while (!pq.empty()) {
-        t = pq.top().f;
-        if () {
-
-        } else {
-        }
+        println(l);
     }
 }
 

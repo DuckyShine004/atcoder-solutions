@@ -270,32 +270,28 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-bool edge(int i, int j, int H, int W) {
-    return (i == 0 || j == 0 || i == H - 1 || j == W - 1);
+bool valid(const pair<int, int> &U, const vector<string> &C, int H, int W) {
+    return (U.f < H && U.f >= 0 && U.s < W && U.s >= 0 && C[U.f][U.s] == '.');
 }
-
 void solve() {
-    int H, W, Y, t;
-    readin(H, W, Y);
-
-    vector<vector<int>> A(H, vector<int>(W));
-    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<int>> pq;
-
-    for (int i = 0; i < H; i++) {
-        for (int j = 0; j < W; j++) {
-            cin >> A[i][j];
-            if (edge(i, j, H, W))
-                pq.push({A[i][j], {i, j}});
-        }
+    map<char, pair<int, int>> dirs = {{'L', {0, -1}}, {'R', {0, 1}}, {'U', {-1, 0}}, {'D', {1, 0}}};
+    int H, W;
+    string s, X;
+    pair<int, int> S, V;
+    readin(H, W);
+    readin(S.f, S.s);
+    --S.f;
+    --S.s;
+    vector<string> C(H);
+    for (int i = 0; i < H; i++)
+        cin >> C[i];
+    cin >> X;
+    for (char x : X) {
+        V = {S.f + dirs[x].f, S.s + dirs[x].s};
+        if (valid(V, C, H, W))
+            S = V;
     }
-
-    while (!pq.empty()) {
-        t = pq.top().f;
-        if () {
-
-        } else {
-        }
-    }
+    cout << S.f + 1 << " " << S.s + 1;
 }
 
 int main() {

@@ -270,32 +270,36 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-bool edge(int i, int j, int H, int W) {
-    return (i == 0 || j == 0 || i == H - 1 || j == W - 1);
+bool valid(const vector<int> &rows, vector<int> &cols, int ld, int rd, int N) {
+    if (ld == N || rd == N)
+        return true;
+    for (int i = 0; i < N; i++) {
+        if (rows[i] == N || cols[i] == N)
+            return true;
+    }
+    return false;
 }
-
 void solve() {
-    int H, W, Y, t;
-    readin(H, W, Y);
+    int N, T, t, r, c, ld = 0, rd = 0;
+    readin(N, T);
+    vector<int> rows(N, 0), cols(N, 0);
 
-    vector<vector<int>> A(H, vector<int>(W));
-    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<int>> pq;
-
-    for (int i = 0; i < H; i++) {
-        for (int j = 0; j < W; j++) {
-            cin >> A[i][j];
-            if (edge(i, j, H, W))
-                pq.push({A[i][j], {i, j}});
+    for (int i = 0; i < T; i++) {
+        cin >> t;
+        r = (t - 1) / N;
+        c = (t - 1) % N;
+        if (r == c)
+            ++ld;
+        if (c == N - r - 1)
+            ++rd;
+        rows[r]++;
+        cols[c]++;
+        if (valid(rows, cols, ld, rd, N)) {
+            println(i + 1);
+            return;
         }
     }
-
-    while (!pq.empty()) {
-        t = pq.top().f;
-        if () {
-
-        } else {
-        }
-    }
+    println(-1);
 }
 
 int main() {

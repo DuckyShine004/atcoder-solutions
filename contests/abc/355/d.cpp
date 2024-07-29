@@ -270,32 +270,26 @@ inline double area(const vec3 &a, const vec3 &b, const vec3 &c) {
     return 0.5 * cross(b - a, c - a).magnitude();
 }
 
-bool edge(int i, int j, int H, int W) {
-    return (i == 0 || j == 0 || i == H - 1 || j == W - 1);
-}
-
 void solve() {
-    int H, W, Y, t;
-    readin(H, W, Y);
-
-    vector<vector<int>> A(H, vector<int>(W));
-    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<int>> pq;
-
-    for (int i = 0; i < H; i++) {
-        for (int j = 0; j < W; j++) {
-            cin >> A[i][j];
-            if (edge(i, j, H, W))
-                pq.push({A[i][j], {i, j}});
-        }
+    // Use line sweep
+    long N, k, l, r, cur = 0, res = 0;
+    cin >> N;
+    vector<pair<long, long>> intervals;
+    for (int i = 0; i < N; i++) {
+        readin(l, r);
+        intervals.psb({l, 0});
+        intervals.psb({r, 1});
     }
-
-    while (!pq.empty()) {
-        t = pq.top().f;
-        if () {
-
+    sort(all(intervals));
+    for (auto &interval : intervals) {
+        if (interval.s == 0) {
+            res += cur;
         } else {
+            ++cur;
         }
     }
+    k = (N * (N - 1)) / 2;
+    println(k - res);
 }
 
 int main() {
